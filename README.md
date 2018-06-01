@@ -54,6 +54,17 @@ There are two alternative ways to get the Cakephp ArangoDb client:
 ```
 composer require cakephparangodb/arangodb
 ```
+> NOTE
+> **IF ANY ERROR THEN 
+> Add minimum-stability and prefer-stable to your composer.json**
+
+Example
+```
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+```
 
 <a name="cloning_git"></a>
 ## Alternative 2: Cloning the git repository
@@ -197,6 +208,7 @@ $data = ['name'=>'shubham715', email'=> 'shubhamsharma715@gmail.com', 'status'=>
 $saveData = $this->Users->save($financeEntity);
 ```
 <br>
+
 
 Here lots of examples that we will update soon.
 
