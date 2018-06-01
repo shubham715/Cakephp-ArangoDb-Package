@@ -166,7 +166,7 @@ abstract class Model
 
     /*
     * Ref Query = FOR u IN common_settings FOR c IN currency FILTER u.airdrop_currency == c.symbol RETURN { commonsettings: u, currency: c } 
-    *Example -  $getCommonSettings = $this->CommonSettings->findWithJoin('all',['contain'=> 'currency', 'conditions'=>['c.airdrop_currency'=> 'u.symbol']]);
+    *Example -  $getCommonSettings = $this->CommonSettings->findWithJoin('all',['contain'=> 'currency', 'conditions'=>['c.currency_id'=> 'u.id']]);
     */
     public function findWithJoin($type = 'all', $options = [])
     {      
