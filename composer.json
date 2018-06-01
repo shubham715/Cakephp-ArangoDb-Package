@@ -9,8 +9,8 @@
     {
       "name": "Shubham Sharma",
       "homepage": "https://github.com/shubham715/Cakephp-ArangoDb-Package",
-      "role": "Developer",
-    },
+      "role": "Developer"
+    }
   ],
   "require": {
     "php": ">=5.6.0"
