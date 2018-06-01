@@ -1,0 +1,30 @@
+{
+  "name": "cakephparangodb/arangodb",
+  "type": "library",
+  "description": "An ArangoDb based model and Query builder for Cakephp 3.x",
+  "keywords": ["cakephp-arangodb", "cakephp3-arango","arangodb-php","ArangoDB","Arango","document store","NoSQL","multi-model","graph database","distributed"],
+  "homepage": "https://github.com/shubham715/Cakephp-ArangoDb-Package",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Shubham Sharma",
+      "homepage": "https://github.com/shubham715/Cakephp-ArangoDb-Package",
+      "role": "Developer"
+    },
+  ],
+  "require": {
+    "php": ">=5.6.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "ArangoDBClient": "lib/"
+    }
+  },
+  "version": "1.0.0",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/shubham715/Cakephp-ArangoDb-Package"
+    }
+  ]
+}
