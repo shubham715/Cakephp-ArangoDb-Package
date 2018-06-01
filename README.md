@@ -1,7 +1,3 @@
-![Cakephp Logo](https://cakephp.org/img/trademarks/logo-2.jpg)
-+
-![ArangoDB-PHP Logo](http://www.arangodb.com/wp-content/uploads/2013/03/logo_arangodbphp_trans.png)
-
 # ArangoDB-CAKEPHP-3x - A ArangoDb based model and Query builder for Cakephp 3.x
 
 <br>
