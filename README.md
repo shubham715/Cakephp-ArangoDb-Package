@@ -73,14 +73,14 @@ To invoke this autoloader, add the following line to your PHP files that will us
 If you do not wish to include autoload.php to load and setup the autoloader, you can invoke the autoloader directly:
 
 ```php
-require 'arangodb-php/lib/ArangoDBClient/autoloader.php';
+require 'cakephparangodb/lib/ArangoDBClient/autoloader.php';
 \ArangoDBClient\Autoloader::init();
 ```
 
 <br>
 
 <a name="howto_use"></a>
-# How to use the PHP client
+# How to use the CAKEPHP client
 
 <a name="setting_up_connection_options"></a>
 ## Setting up the connection options
@@ -113,18 +113,89 @@ Thats it. Now you can use Test Table of arangodb into controller like below exam
 <a name="cakephp_arangodb_controllers">
 ##Here i am giving some examples that how you can use models in controller
 
+##FIND QUERY
+
 ## Using Find
+```
+$data = $this->Users->find('all');
+```
+
+## Using Find with conditions
+```
+$data = $this->Users->find('all',['conditions'=>['name'=>'test','email'=>'test@gmail.com']]);
+```
+
+## Using findById()
+```
+$data = $this->Users->findById(10);
+```
+
+## Using Find with select
+```
 $data = $this->Users->find('all',['select'=>['name','email','status']]);
+```
+
 ## Using FindOne
+```
 $data = $this->Users->findOne('all',['conditions'=>['email'=> $email]]);
+```
+
+## advanced find with select , sort , limit
+```
+$data = $this->Users->find('all',['select'=>['name','email','status']]);
+$data = $this->Users->find('all', ['conditions'=>['email'=>'test@gmail.com'],'order'=>['paydate'=> 'ASC'],'select'=>['name','email','status']]);
+```
+
+## Using isUnique
+```
+$data = $this->Users->isUnique(['conditions'=>['email'=> $email]]);
+```
+
+## Using Count
+```
+$data = $this->Users->count(['conditions'=>['email'=> $email]]);
+```
+
+##Updation
+
+## Using updateById
+```
+$data = $this->Users->updateById(['email'=> $email],['id'=> 1]);
+```
+
+## Using updateAll
+```
+$data = $this->Users->updateAll(['email'=> $email],['id'=> 1]);
+```
+
+##deletion
+
+deleteById
+## Using deleteById
+```
+$data = $this->Users->deleteById(1);
+```
+
+deleteAll
+## Using deleteAll
+```
+$data = $this->Users->deleteAll(['email'=> $email]);
+```
+
+## Using createOrUpdate()
+```
+$data = $this->Users->createOrUpdate(['email'=> $email,'id'=> 10]);
+```
+
 ## Join
 $data = $this->Users->findWithJoin('all',['contain'=> 'userdetails', 'conditions'=>['c.userid'=> 'u.id']]);
 //Here c is refer for base table and u is for join table.
 
 ##Save Data
+```
 $data = ['name'=>'shubham715', email'=> 'shubhamsharma715@gmail.com', 'status'=> 1];
 $saveData = $this->Users->save($financeEntity);
-
+```
 <br>
 
 Here lots of examples that we will update soon.
