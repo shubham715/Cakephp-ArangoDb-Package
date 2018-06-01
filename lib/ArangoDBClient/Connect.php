@@ -1,11 +1,11 @@
 <?php
 
 /**
- * ArangoDB PHP client: single user document
+ * ArangoDB Cakephp client:
  *
- * @package   ArangoDBClient
- * @author    Frank Mayer
- * @since     1.2
+ * @package   CakephpArangoDBClient
+ * @author    Shubham Sharma
+ * @since     1.0
  */
 
 namespace ArangoDBClient;
@@ -62,16 +62,8 @@ class Connect {
     	self::$_options = array_merge(self::$_options, $options);
         ArangoException::enableLogging();
     	return self::$_connection = new ArangoConnection(self::$_options);
-    	//return    $collectionHandler = new ArangoCollectionHandler($connection);
     }
 
-  /*  public static function collectionHandler(array $options, $collectionName='')
-    {
-    	$collectionHandler =  new ArangoCollectionHandler(getConnection());
-    	$collectionObject = new ArangoCollection();
-	    $collectionObject->setName($collectionName);
-	    return $collectionArango = $collectionHandler->create($collectionObject);
-    }*/
 
     public static function collectionHandler($connection) {
         return $collectionHandler = new ArangoCollectionHandler($connection);
@@ -90,22 +82,7 @@ class Connect {
     }
 
     public static function newArangoDocument() {
-    	//$documentHandler =  new ArangoDocumentHandler(getConnection());
     	return $documentObject = new ArangoDocument();
-    }
-
-   /* $handler = new ArangoDocumentHandler($connection);
-
-    // create a new document
-    $user = new ArangoDocument();
-
-    // use set method to set document properties
-    $user->set('name', 'John');
-    $user->set('age', 25);
-    $user->set('thisIsNull', null);*/
-
-    //  ArangoCollectionHandler
-   //  
-  //  ArangoDocumentHandler
+    }   
 }
 
