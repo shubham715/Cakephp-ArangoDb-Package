@@ -353,6 +353,16 @@ abstract class Model
         }     
         return $cursor = $cursor->getAll();
     }
+     
+    public function customQueryJson($query, $paginate='') {
+        // create a statement to insert 1000 test users
+        $statement = Connect::ArangoStatementHandlerArray(
+        $this->_arangoConnect, $query
+        );
+        // execute the statement
+        $cursor = $statement->execute();     
+        return $cursor = $cursor->getAll();
+    } 
 
     public function customQueryWithParams($query) {
         // create a statement to insert 1000 test users
