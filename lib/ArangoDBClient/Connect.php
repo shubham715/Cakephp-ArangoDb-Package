@@ -76,6 +76,10 @@ class Connect {
     public static function ArangoStatementHandler($connection, $query) {
     	return $handler = new ArangoStatement($connection, ['query' => $query, "options"=>["fullCount"=> true ]]);
     }
+	
+    public static function ArangoStatementHandlerArray($connection, $query) {
+      return $handler = new ArangoStatement($connection, ['query' => $query, "_flat"=> true ]);
+    }		
 
     public static function ArangoBindStatementHandler($connection, $query) {
       return $handler = new ArangoStatement($connection, $query);
