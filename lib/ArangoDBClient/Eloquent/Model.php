@@ -66,7 +66,7 @@ abstract class Model
     public function identify($data)
     {
         if(isset($data['email']) && isset($data['password']) && $data['email']!="" && $data['password']!="") {
-            $getUser = $this->findOne('all', ['conditions'=>['email'=> $data['email']], 'responseTypeArray'=>true]);
+            $getUser = $this->findOne('all', ['conditions'=>['email'=> $data['email']], 1]);
             if($getUser) {      
                   
               if ((new DefaultPasswordHasher)->check($data['password'], $getUser['password'])) { 
@@ -77,14 +77,14 @@ abstract class Model
         return false;    
     }
 
-    public function save(array $data=[])
+    public function save(array $data=[], $isResponseArray='')
     {
         //check implemented Events 
         $data = $this->implementedEvents($data);
         $data = json_encode($data);
         $q = 'INSERT '.$data.' INTO '.$this->_table.' LET result = NEW RETURN result';
-        $result = $this->customQuery($q);             
-        return $result;        
+        $result = ($isResponseArray)?$this->customQueryJson($q):$this->customQuery($q);             
+        return (isset($result[0]))?(($isResponseArray)?$result[0]:$result[0]->getAll()):false;         
     }
 
 
@@ -122,7 +122,11 @@ abstract class Model
         if(count($selectArray) > 0) {
          $str = "RETURN {";
          foreach ($selectArray as $key => $value) {
+          if(is_numeric($key)) {
             $str .= $value.": c.".$value.", ";
+          } else {
+            $str .= (strpos($value,'DATE') > -1)?($key.": ".$value.", "):($key.": c.".$value.", ");
+          }
          }
          $str = trim($str, ", ");
          $str .= "}";
@@ -186,7 +190,7 @@ abstract class Model
       return $response;         
     }
 
-    public function find($type = 'all', $options = [])
+    public function find($type = 'all', $options = [], $isResponseArray=false)
     {
       if($type=="list") {
           $options['select'] = [$options['key'], $options['value']];
@@ -208,40 +212,45 @@ abstract class Model
           } 
       } else { 
         $ispaginate = isset($options['paginate'])?true:false;
-        $response = $this->customQuery($q, $ispaginate);                
+        $response = ($isResponseArray==true)?$this->customQueryJson($q, $ispaginate):$this->customQuery($q, $ispaginate);               
       }  
       return $response;         
     }
 
-    public function findById($id='')
+    public function findById($id='', $isResponseArray=false)
     {
        if($id!="") {
         $q = 'RETURN DOCUMENT("'.$this->_table.'", "'.$id.'")';
-        $result = $this->customQuery($q);  
-        return (isset($result[0]))?$result[0]->getAll():false; 
+        $result = ($isResponseArray==true)?$this->customQueryJson($q):$this->customQuery($q);               
+        return (isset($result[0]))?(($isResponseArray)?$result[0]:$result[0]->getAll()):false; 
        }
     } 
 
-    public function findOne($type = 'all', $options = [])
+    public function findOne($type = 'all', $options = [], $isResponseArray=false)
     {
         $str_condition = isset($options['conditions'])?$this->conditionProcess($options['conditions']):"";
         $str_returndata = isset($options['select'])?$this->returnData($options['select']):"RETURN c";
         $str_sort = isset($options['order'])?$this->orderbyData($options['order']):"";
         $str_limit = "LIMIT 1";
 
-        $q = "FOR c IN ".$this->_table." ".$str_condition." ".$str_sort." ".$str_limit." ".$str_returndata;
-        $result = $this->customQuery($q, $bindParams=[]);
-
-        if(isset($options['responseTypeArray'])) {
-          if(isset($result[0])) {  
-            $result = $result[0];            
-            $response = $result->getAll();   
-            $response['id'] = $response['_key'];               
-            return $response;
-          }
+        $q = "FOR c IN ".$this->_table." ".$str_condition." ".$str_sort." ".$str_limit." ".$str_returndata; 
+        //$result = $this->customQuery($q, $bindParams=[]);
+        $response = ($isResponseArray==true)?$this->customQueryJson($q):$this->customQuery($q);
+        if($isResponseArray!=true) {
+          if(isset($options['responseTypeArray'])) {
+            if(isset($result[0])) {  
+              $result = $result[0];            
+              $response = $result->getAll();   
+              $response['id'] = $response['_key'];               
+              return $response;
+            }
+          } else {
+            return isset($response[0])?$response[0]->getAll():false;   
+          } 
         } else {
-          return isset($result[0])?$result[0]->getAll():false;   
-        } 
+                
+          return isset($response[0])?$response[0]:false;   
+        }
         return false;         
     }
 
@@ -366,13 +375,28 @@ abstract class Model
 
     public function customQueryWithParams($query) {
         // create a statement to insert 1000 test users
+        $query["_flat"] = true;
         $statement = Connect::ArangoBindStatementHandler(
         $this->_arangoConnect, $query
         );
               
         // execute the statement
         $cursor = $statement->execute();
-        return $cursor = $cursor->getAll();
+        $cursor = $cursor->getAll();
+        return isset($cursor[0])?$cursor[0]:[];
+    }
+
+    public function customQueryAllWithParams($query) {
+        // create a statement to insert 1000 test users
+        $query["_flat"] = true;
+        $statement = Connect::ArangoBindStatementHandler(
+        $this->_arangoConnect, $query
+        );
+              
+        // execute the statement
+        $cursor = $statement->execute();
+        $cursor = $cursor->getAll();
+        return $cursor;
     }
 
     public function newEntity($data = null, array $options = [])
@@ -446,7 +470,12 @@ abstract class Model
             { 
               $str .=  "c.".$key." ".(((is_numeric($value) || (string)$value=='0' || (string)$value=='1') && $key!="_key")?$value:"'".$value."'");
             } else { 
-              $str .= "c.".$key."==".(((is_numeric($value) || (string)$value=='0' || (string)$value=='1') && $key!="_key")?$value:"'".$value."'");
+              if(is_numeric($value)) {
+
+              $str .= "( c.".$key."=="."'".$value."' OR c.".$key."==".$value.")";
+              } else {
+                $str .= "c.".$key."==".(((is_numeric($value) || (string)$value=='0' || (string)$value=='1') && $key!="_key")?$value:"'".$value."'");
+              }
             }
 
             $str .=" AND ";
