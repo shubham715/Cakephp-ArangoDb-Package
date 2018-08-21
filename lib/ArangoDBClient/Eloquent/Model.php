@@ -442,7 +442,11 @@ abstract class Model
              {      
                $str .=  "c.".$key." ".((is_numeric($value) || (string)$value=='0' || (string)$value=='1')?$value:"'".$value."'");
              } else {
+              if(is_numeric($value)) {
+               $str .= "( c.".$key."=="."'".$value."' OR c.".$key."==".$value.")";
+              } else {
                $str .=  "c.".$key."==".((is_numeric($value) || (string)$value=='0' || (string)$value=='1')?$value:"'".$value."'");
+              }
              }
             $str .= " OR ";
          }
