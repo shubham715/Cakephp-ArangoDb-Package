@@ -115,11 +115,11 @@ use ArangoDBClient\Connect;
 
 class UsersTable extends \ArangoDBClient\Eloquent\Model
 {
-	
+
 }
 ?>
 ```
-Thats it. Now you can use Test Table of arangodb into controller like below example
+Thats it. Now you can load model in your controller by using loadModel and use users Table of arangodb into controller like below example
 
 <a name="cakephp_arangodb_controllers">
 ##Here i am giving some examples that how you can use models in controller
