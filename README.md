@@ -107,7 +107,7 @@ For now you need to open yourProject/vendor/cakephparangodb/arangodb/lib/ArangoD
 
 Here for example i am changing UsersTable Model.
 
-
+```
 <?php
 namespace App\Model\Table;
 
@@ -115,10 +115,10 @@ use ArangoDBClient\Connect;
 
 class UsersTable extends \ArangoDBClient\Eloquent\Model
 {
-
+	
 }
 ?>
-
+```
 Thats it. Now you can use Test Table of arangodb into controller like below example
 
 <a name="cakephp_arangodb_controllers">
@@ -199,8 +199,10 @@ $data = $this->Users->createOrUpdate(['email'=> $email,'id'=> 10]);
 ```
 
 ## Join
+```
 $data = $this->Users->findWithJoin('all',['contain'=> 'userdetails', 'conditions'=>['c.userid'=> 'u.id']]);
 //Here c is refer for base table and u is for join table.
+```
 
 ##Save Data
 ```
